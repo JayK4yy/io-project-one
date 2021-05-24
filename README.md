@@ -1,2 +1,2 @@
 # io-project-one
-Projekt programu do zarządzania projektów w firmach programistycznych 
+Projekt programu do zarządzania projektami w firmach programistycznych 
