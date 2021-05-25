@@ -4,10 +4,10 @@ from pywebio.output import *
 
 
 def main():
-    mainmenu=input_group("Strona główna ",[actions('', [
+    mainmenu = input_group("Strona główna ", [actions('', [
             {'label': 'Dodaj pracownika', 'value': 'addEmployee'},
             {'label': 'Utwórz projekt', 'value': 'CreateProject'},
-            {'label': 'Wyloguj', 'value': 'logout',},
+            {'label': 'Wyloguj', 'value': 'logout'},
         ], name='action'),
     ])
     if mainmenu['action'] == 'addEmployee':
@@ -17,6 +17,7 @@ def main():
     elif mainmenu['action'] == 'logout':
         print('Wylogowano')
         exit()
+
 
 def addEmployee():
     data = input_group("Dodawanie pracownika", [
@@ -71,12 +72,11 @@ def login():
         )
 
         cur = conn.cursor()
-        cur.execute("USE mysql")
-        cur.execute("SELECT * FROM orders")
+        cur.execute("USE ioProjectOne")
+        cur.execute("SELECT * FROM Employees")
     except:
         put_error('Błędne dane')
         login()
-
 
 
 if __name__ == '__main__':
