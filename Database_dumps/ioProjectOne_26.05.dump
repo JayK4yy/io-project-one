@@ -1,0 +1,187 @@
+-- MySQL dump 10.13  Distrib 8.0.16, for osx10.12 (x86_64)
+--
+-- Host: localhost    Database: ioProjectOne
+-- ------------------------------------------------------
+-- Server version	5.5.5-10.5.9-MariaDB
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+ SET NAMES utf8mb4 ;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `Authentication`
+--
+
+DROP TABLE IF EXISTS `Authentication`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `Authentication` (
+  `employeeNumber` int(5) NOT NULL,
+  `login` varchar(255) NOT NULL,
+  `pass_key` varbinary(255) NOT NULL,
+  `salt` varbinary(255) NOT NULL,
+  PRIMARY KEY (`employeeNumber`),
+  CONSTRAINT `authentication_ibfk_1` FOREIGN KEY (`employeeNumber`) REFERENCES `Employees` (`employeeNumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Authentication`
+--
+
+LOCK TABLES `Authentication` WRITE;
+/*!40000 ALTER TABLE `Authentication` DISABLE KEYS */;
+INSERT INTO `Authentication` VALUES (1,'user1',_binary 'b\'\\xaa\\xf3\\xb5\\xa3\\r\\xcd\\x94\\x1c\\x83Yk\\xb4.\\x8f\\xfc\\x02s\\xac\\xc8\\xa4\\xf7\\x03\\x15\\x8a\\xc7\\x99ni\\xc5\\x1e\\x0c\\x0f\'',_binary 'b\'\\xac\\xdfS\\x1c\\xb7\\x9fL\\x07\\xa2\\x90\\x04\\t\\xc3\\xcb\\x1f\\x82\\xbfaZ~2\\xff}\\xe8U\\xcbW\\xac\\xd7{\\xf6_\'');
+/*!40000 ALTER TABLE `Authentication` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Employees`
+--
+
+DROP TABLE IF EXISTS `Employees`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `Employees` (
+  `employeeNumber` int(5) NOT NULL AUTO_INCREMENT,
+  `lastName` varchar(20) DEFAULT NULL,
+  `firstName` varchar(20) DEFAULT NULL,
+  `reportsTo` int(5) DEFAULT NULL,
+  `office` varchar(20) DEFAULT NULL,
+  `jobTitle` varchar(20) DEFAULT NULL,
+  `city` varchar(20) DEFAULT NULL,
+  `postalCode` varchar(10) DEFAULT NULL,
+  `adress` varchar(20) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `gender` varchar(1) DEFAULT NULL,
+  `email` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`employeeNumber`),
+  KEY `reportsTo` (`reportsTo`),
+  CONSTRAINT `employees_ibfk_1` FOREIGN KEY (`reportsTo`) REFERENCES `Employees` (`employeeNumber`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Employees`
+--
+
+LOCK TABLES `Employees` WRITE;
+/*!40000 ALTER TABLE `Employees` DISABLE KEYS */;
+INSERT INTO `Employees` VALUES (1,'Paszkieiwcz','Jakub',1,'Szczecin','kierownik','Szczecin',NULL,NULL,NULL,'M',NULL);
+/*!40000 ALTER TABLE `Employees` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Projects`
+--
+
+DROP TABLE IF EXISTS `Projects`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `Projects` (
+  `projectNumber` int(10) NOT NULL,
+  `projectLeader` int(5) DEFAULT NULL,
+  `progress` int(3) DEFAULT NULL,
+  `status` varchar(20) NOT NULL,
+  `dateEnded` date DEFAULT NULL,
+  `deadline` date DEFAULT NULL,
+  `dateCreated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`projectNumber`),
+  KEY `projectLeader` (`projectLeader`),
+  CONSTRAINT `projects_ibfk_1` FOREIGN KEY (`projectLeader`) REFERENCES `Employees` (`employeeNumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Projects`
+--
+
+LOCK TABLES `Projects` WRITE;
+/*!40000 ALTER TABLE `Projects` DISABLE KEYS */;
+INSERT INTO `Projects` VALUES (1,1,NULL,'New',NULL,NULL,'2021-05-25 19:40:49'),(2,1,NULL,'New',NULL,NULL,'2021-05-25 19:42:11');
+/*!40000 ALTER TABLE `Projects` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Skills`
+--
+
+DROP TABLE IF EXISTS `Skills`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `Skills` (
+  `employeeNumber` int(5) NOT NULL,
+  `c` tinyint(1) DEFAULT NULL,
+  `c++` tinyint(1) DEFAULT NULL,
+  `c#` tinyint(1) DEFAULT NULL,
+  `html` tinyint(1) DEFAULT NULL,
+  `css` tinyint(1) DEFAULT NULL,
+  `java` tinyint(1) DEFAULT NULL,
+  `python` tinyint(1) DEFAULT NULL,
+  `javascript` tinyint(1) DEFAULT NULL,
+  `sql` tinyint(1) DEFAULT NULL,
+  `php` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`employeeNumber`),
+  CONSTRAINT `skills_ibfk_1` FOREIGN KEY (`employeeNumber`) REFERENCES `Employees` (`employeeNumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Skills`
+--
+
+LOCK TABLES `Skills` WRITE;
+/*!40000 ALTER TABLE `Skills` DISABLE KEYS */;
+INSERT INTO `Skills` VALUES (1,1,1,0,1,1,1,1,0,1,0);
+/*!40000 ALTER TABLE `Skills` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Teams`
+--
+
+DROP TABLE IF EXISTS `Teams`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `Teams` (
+  `employeeNumber` int(5) NOT NULL,
+  `projectNumber` int(10) NOT NULL,
+  `role` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`employeeNumber`,`projectNumber`),
+  KEY `projectNumber` (`projectNumber`),
+  CONSTRAINT `teams_ibfk_1` FOREIGN KEY (`employeeNumber`) REFERENCES `Employees` (`employeeNumber`),
+  CONSTRAINT `teams_ibfk_2` FOREIGN KEY (`projectNumber`) REFERENCES `Projects` (`projectNumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Teams`
+--
+
+LOCK TABLES `Teams` WRITE;
+/*!40000 ALTER TABLE `Teams` DISABLE KEYS */;
+INSERT INTO `Teams` VALUES (1,1,'team leader'),(1,2,'programista');
+/*!40000 ALTER TABLE `Teams` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'ioProjectOne'
+--
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2021-05-26 12:25:15

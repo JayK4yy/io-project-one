@@ -1,9 +1,11 @@
 import mariadb
 from pywebio.input import *
 from pywebio.output import *
+from login import *
 
 
 def main():
+    clear()
     mainmenu = input_group("Strona główna ", [actions('', [
             {'label': 'Dodaj pracownika', 'value': 'addEmployee'},
             {'label': 'Utwórz projekt', 'value': 'CreateProject'},
@@ -65,15 +67,26 @@ def login():
 
     try:
         conn = mariadb.connect(
-            user=logindata['login'],
-            password=logindata['password'],
+            user='projectOneUser',
+            password='VeryHardP@ssw0rd',
             host="localhost",
             port=3306,
+            database="ioProjectOne"
         )
 
-        cur = conn.cursor()
-        cur.execute("USE ioProjectOne")
-        cur.execute("SELECT * FROM Employees")
+        cursor = conn.cursor()
+        # odczytujemy z bazy danych 'key' i 'salt' dla użytkokwnika o wpisanym loginie
+        # jeśli login nie istnieje to wyskoczy komunikat 'błędne dane'
+        cursor.execute("SELECT pass_key, salt FROM Authentication WHERE login = ?", (logindata['login'],))
+        lst = cursor.fetchall()     # pobierz liste
+        key = lst[0][0]             # pierwszy result -> key
+        salt = lst[0][1]            # drugi result -> salt
+        key = key.decode('unicode-escape').encode('ISO-8859-1')
+        salt = salt.decode('unicode-escape').encode('ISO-8859-1')
+        # weryfikacja danych (funkcja z pliku login.py)
+        login_veryfication(salt[2:-1], key[2:-1], logindata['password'])
+
+
     except:
         put_error('Błędne dane')
         login()
