@@ -63,7 +63,7 @@ def login():
 
     logindata = input_group("Logowanie", [
         input('Login', name='login'),
-        input('Hasło', name='password')])
+        input('Hasło',type=PASSWORD, name='password')])
 
     try:
         conn = mariadb.connect(
