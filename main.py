@@ -22,6 +22,48 @@ def main():
 
 
 def addEmployee():
+    def addSQL(data):
+        #Tutaj tylko wartosci zmieniamy zeby nie bylo Tak/Nie
+        skills=['C','Cpp','Cs','Python','Java','HTML','CSS','JavaScript','SQL','PHP']
+
+        for skill in skills:
+            if data[skill]=='Tak':
+                data[skill]=1
+            elif data[skill]=='Nie':
+                data[skill]=0
+
+        #Laczymy sie z baza(przyda sie zrobic do tego funckje)
+        conn = mariadb.connect(
+            user='projectOneUser',
+            password='VeryHardP@ssw0rd',
+            host="localhost",
+            port=3306,
+            database="ioProjectOne"
+        )
+
+
+        cursor = conn.cursor()
+        cursor.execute("SELECT MAX(employeeNumber) FROM employees")
+        userID=cursor.fetchall()[0][0]+1
+
+        #Dodajemy do pracownikow
+        query_user="""INSERT INTO employees(employeeNumber,lastName,firstName,office,jobTitle,city,postalCode,adress,phone,gender,email)
+                       VALUES (%d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) """
+        values_user=(userID,data['lastName'],data['firstName'],data['office'],data['jobTitle'],data['city'],data['postalCode'],data['adress'],data['phone'],
+                data['gender'],data['email'])
+        cursor.execute(query_user, values_user)
+
+       #Dodajemy do skilli
+        query_skills = """INSERT INTO skills(employeeNumber,c,html,css,java,python,javascript,cs,sqlskill,php,cpp) VALUES (%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d)"""
+        values_skills = (
+            userID,data['C'],  data['Python'], data['Java'], data['HTML'], data['CSS'],data['JavaScript'],data['Cs'],data['SQL'],data['PHP'],data['Cpp'])
+        cursor.execute(query_skills, values_skills)
+
+        conn.commit()
+
+
+
+
     data = input_group("Dodawanie pracownika", [
         input('Imię', name='firstName'),
         input('Nazwisko', name='lastName'),
@@ -54,6 +96,7 @@ def addEmployee():
         ], name='action'),
     ])
     if data['action'] == 'save':
+        addSQL(data)
         main()
     elif data['action'] == 'cancel':
         main()
