@@ -1,8 +1,7 @@
 import hashlib
 import os
 
-
-def hash_login(login, password):
+def hash_login(password):
     salt = os.urandom(32)       # Remember this
 
     key = hashlib.pbkdf2_hmac(
@@ -11,7 +10,7 @@ def hash_login(login, password):
         salt,   # Provide the salt
         100000  # It is recommended to use at least 100,000 iterations of SHA-256
     )
-    return login, salt, key
+    return salt, key
 
 
 def login_veryfication(salt, key, password_to_check):
