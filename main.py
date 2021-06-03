@@ -1,8 +1,9 @@
 import mariadb
 from pywebio.input import *
 from pywebio.output import *
-from employees import addEmployee
-from login import login_veryfication
+import employees
+# import projects
+import hash
 
 
 def connect_database():
@@ -25,9 +26,9 @@ def main_menu():
         ], name='action'),
     ])
     if mainmenu['action'] == 'addEmployee':
-        addEmployee()
+        employees.addEmployee()
     elif mainmenu['action'] == 'CreateProject':
-        print('bb')
+        projects.addProject()
     elif mainmenu['action'] == 'logout':
         print('Wylogowano')
         exit()
@@ -49,8 +50,8 @@ def login():
         salt = lst[0][1]            # drugi result -> salt
         key = key.decode('unicode-escape').encode('ISO-8859-1')
         salt = salt.decode('unicode-escape').encode('ISO-8859-1')
-        # weryfikacja danych (funkcja z pliku login.py)
-        login_veryfication(salt[2:-1], key[2:-1], logindata['password'])
+        # weryfikacja danych (funkcja z pliku hash.py)
+        hash.login_veryfication(salt[2:-1], key[2:-1], logindata['password'])
 
     except IndexError:
         put_error('Błędny login')

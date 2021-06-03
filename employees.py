@@ -1,8 +1,7 @@
 from pywebio.input import *
 from pywebio.output import *
-from login import hash_login
+from hash import hash_login
 from main import connect_database, main_menu
-
 
 conn = connect_database()
 
@@ -17,12 +16,12 @@ def addSQL(data):
                 data[skill] = 1
             elif data[skill] == 'Nie':
                 data[skill] = 0
-        if data['reportsTo'] == 'Jakub Paszkiewicz':
-            data['reportsTo'] = 1
-        elif data['reportsTo'] == 'Kacper Kubicki':
-            data['reportsTo'] = 2
 
         cursor = conn.cursor()
+        cursor.execute("SELECT employeeNumber FROM Employees \
+                WHERE CONCAT_WS(' ', firstName, lastName) = ?", (data['reportsTo'],))
+        data['reportsTo'] = cursor.fetchall()[0][0]
+
         cursor.execute("SELECT MAX(employeeNumber) FROM employees")
         userID = cursor.fetchall()[0][0] + 1
 
@@ -60,6 +59,8 @@ def addEmployee():
     cursor = conn.cursor()
     cursor.execute("SELECT CONCAT_WS(' ',firstName,lastName) FROM Employees WHERE jobTitle = 'kierownik'")
     kierownicy = cursor.fetchall()
+    for i in range(len(kierownicy)):
+        kierownicy[i] = kierownicy[i][0]
 
     data_dodaj = input_group("Dodawanie pracownika", [
         input('Imię', name='firstName'),
