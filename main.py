@@ -1,10 +1,22 @@
 import mariadb
 from pywebio.input import *
 from pywebio.output import *
-from login import *
-from addEmployee import *
+from employees import addEmployee
+from login import login_veryfication
 
-def main():
+
+def connect_database():
+    connection = mariadb.connect(
+        user='projectOneUser',
+        password='VeryHardP@ssw0rd',
+        host="localhost",
+        port=3306,
+        database="ioProjectOne"
+    )
+    return connection
+
+
+def main_menu():
     clear()
     mainmenu = input_group("Strona główna ", [actions('', [
             {'label': 'Dodaj pracownika', 'value': 'addEmployee'},
@@ -20,21 +32,14 @@ def main():
         print('Wylogowano')
         exit()
 
+
 def login():
 
     logindata = input_group("Logowanie", [
         input('Login', name='login'),
-        input('Hasło',type=PASSWORD, name='password')])
+        input('Hasło', type=PASSWORD, name='password')])
 
     try:
-        conn = mariadb.connect(
-            user='projectOneUser',
-            password='VeryHardP@ssw0rd',
-            host="localhost",
-            port=3306,
-            database="ioProjectOne"
-        )
-
         cursor = conn.cursor()
         # odczytujemy z bazy danych 'key' i 'salt' dla użytkokwnika o wpisanym loginie
         # jeśli login nie istnieje to wyskoczy komunikat 'błędne dane'
@@ -47,13 +52,19 @@ def login():
         # weryfikacja danych (funkcja z pliku login.py)
         login_veryfication(salt[2:-1], key[2:-1], logindata['password'])
 
-
-    except:
-        put_error('Błędne dane')
+    except IndexError:
+        put_error('Błędny login')
+        login()
+    except ValueError:
+        put_error('Błędne hasło')
         login()
 
 
 if __name__ == '__main__':
-    login()
-    main()
-    #addEmployee()
+    try:
+        conn = connect_database()
+        login()
+        main_menu()
+        # addEmployee()
+    except mariadb.Error:
+        put_error('Błąd połączenia z bazą danych')

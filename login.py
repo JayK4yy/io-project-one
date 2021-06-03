@@ -1,6 +1,7 @@
 import hashlib
 import os
 
+
 def hash_login(password):
     salt = os.urandom(32)       # Remember this
 
@@ -25,4 +26,4 @@ def login_veryfication(salt, key, password_to_check):
         print('Password is correct')
     else:
         print('Password is incorrect')
-        exit(1)
+        raise ValueError("Wrong password")
