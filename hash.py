@@ -1,5 +1,17 @@
+import mariadb
 import hashlib
 import os
+
+
+def connect_database():
+    connection = mariadb.connect(
+        user='projectOneUser',
+        password='VeryHardP@ssw0rd',
+        host="localhost",
+        port=3306,
+        database="ioProjectOne"
+    )
+    return connection
 
 
 def hash_login(password):

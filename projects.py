@@ -1,7 +1,6 @@
 from pywebio.input import *
 from pywebio.output import *
-from main import connect_database, main_menu
-import hash
+from hash import connect_database, hash_login
 
 
 conn = connect_database()
@@ -43,7 +42,7 @@ def addSQL(data):
             data['Cs'], data['SQL'], data['PHP'], data['Cpp'])
         cursor.execute(query_skills, values_skills)
 
-        salt, key = hash.hash_login(data['password'])
+        salt, key = hash_login(data['password'])
         salt = str(salt)
         key = str(key)
         query_login = """INSERT INTO authentication(employeeNumber,login,pass_key,salt) VALUES (%d,%s,%s,%s) """
@@ -65,7 +64,8 @@ def addProject():
 
     data_dodaj = input_group("Dodawanie projektu", [
         input('Tytuł projektu', name='projectTitle'),
-
+        select('Kierownik projektu', kierownicy, name='reportsTo'),
+        input('Termin wykonania', name='deadline', type=DATE),
 
         actions('', [
             {'label': 'Zapisz', 'value': 'save'},
@@ -75,6 +75,8 @@ def addProject():
 
     if data_dodaj['action'] == 'save':
         addSQL(data_dodaj)
-        main_menu()
+        return
+        # main_menu()
     elif data_dodaj['action'] == 'cancel':
-        main_menu()
+        # main_menu()
+        return

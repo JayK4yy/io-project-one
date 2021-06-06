@@ -1,7 +1,6 @@
 from pywebio.input import *
 from pywebio.output import *
-from hash import hash_login
-from main import connect_database, main_menu
+from hash import hash_login, connect_database
 
 conn = connect_database()
 
@@ -97,6 +96,8 @@ def addEmployee():
 
     if data_dodaj['action'] == 'save':
         addSQL(data_dodaj)
-        main_menu()
+        # main_menu()
+        return
     elif data_dodaj['action'] == 'cancel':
-        main_menu()
+        # main_menu()
+        return

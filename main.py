@@ -2,36 +2,26 @@ import mariadb
 from pywebio.input import *
 from pywebio.output import *
 import employees
-# import projects
-import hash
-
-
-def connect_database():
-    connection = mariadb.connect(
-        user='projectOneUser',
-        password='VeryHardP@ssw0rd',
-        host="localhost",
-        port=3306,
-        database="ioProjectOne"
-    )
-    return connection
+import projects
+from hash import login_veryfication, connect_database
 
 
 def main_menu():
-    clear()
-    mainmenu = input_group("Strona główna ", [actions('', [
-            {'label': 'Dodaj pracownika', 'value': 'addEmployee'},
-            {'label': 'Utwórz projekt', 'value': 'CreateProject'},
-            {'label': 'Wyloguj', 'value': 'logout'},
-        ], name='action'),
-    ])
-    if mainmenu['action'] == 'addEmployee':
-        employees.addEmployee()
-    elif mainmenu['action'] == 'CreateProject':
-        projects.addProject()
-    elif mainmenu['action'] == 'logout':
-        print('Wylogowano')
-        exit()
+    while True:
+        clear()
+        mainmenu = input_group("Strona główna ", [actions('', [
+                {'label': 'Dodaj pracownika', 'value': 'addEmployee'},
+                {'label': 'Utwórz projekt', 'value': 'CreateProject'},
+                {'label': 'Wyloguj', 'value': 'logout'},
+            ], name='action'),
+        ])
+        if mainmenu['action'] == 'addEmployee':
+            employees.addEmployee()
+        elif mainmenu['action'] == 'CreateProject':
+            projects.addProject()
+        elif mainmenu['action'] == 'logout':
+            print('Wylogowano')
+            exit()
 
 
 def login():
@@ -51,7 +41,7 @@ def login():
         key = key.decode('unicode-escape').encode('ISO-8859-1')
         salt = salt.decode('unicode-escape').encode('ISO-8859-1')
         # weryfikacja danych (funkcja z pliku hash.py)
-        hash.login_veryfication(salt[2:-1], key[2:-1], logindata['password'])
+        login_veryfication(salt[2:-1], key[2:-1], logindata['password'])
 
     except IndexError:
         put_error('Błędny login')
