@@ -96,8 +96,6 @@ def addEmployee():
 
     if data_dodaj['action'] == 'save':
         addSQL(data_dodaj)
-        # main_menu()
         return
     elif data_dodaj['action'] == 'cancel':
-        # main_menu()
         return

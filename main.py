@@ -16,7 +16,8 @@ def main_menu():
         with use_scope('header'):
             put_html(header_style)
 
-        show_projects()
+        remove('projects')
+        projects.show_projects()
 
         mainmenu = input_group("Strona główna ", [actions('', [
                 {'label': 'Dodaj pracownika', 'value': 'addEmployee'},
@@ -33,6 +34,8 @@ def main_menu():
         elif mainmenu['action'] == 'logout':
             remove('projects')
             print('Wylogowano')
+            with use_scope('projects'):
+                put_text("WYLOGOWANO")
             exit()
 
 
@@ -60,26 +63,6 @@ def login():
     except ValueError:
         put_error('Błędne hasło')
         login()
-
-
-@use_scope('projects')
-def show_projects():
-    set_scope('projects')
-    cursor = conn.cursor()
-    cursor.execute("""
-    SELECT 
-        projectNumber,
-        projectTitle,
-        CONCAT_WS(' ', firstName, lastName) as 'leader_name',
-        progress,
-        deadline
-    FROM Projects JOIN Employees
-    ON Projects.projectLeader = Employees.employeeNumber;
-    """)
-    lst = cursor.fetchall()  # pobierz liste
-    put_text("Lista projektów:")
-
-    put_table(lst, header=['Numer', 'Tytuł projektu', 'Kierownik projektu', 'Postępy prac', 'Deadline'])
 
 
 if __name__ == '__main__':
