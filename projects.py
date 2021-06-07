@@ -1,3 +1,4 @@
+import pywebio.session
 from pywebio.input import *
 from pywebio.output import *
 from hash import connect_database, hash_login
@@ -7,8 +8,6 @@ conn = connect_database()
 
 
 def addSQL(data):
-    # Tutaj tylko wartosci zmieniamy zeby nie bylo Tak/Nie
-    if data['login'] != '' and data['password'] != '':
         skills = ['C', 'Cpp', 'Cs', 'Python', 'Java', 'HTML', 'CSS', 'JavaScript', 'SQL', 'PHP']
 
         for skill in skills:
@@ -50,9 +49,6 @@ def addSQL(data):
         cursor.execute(query_login, values_login)
 
         conn.commit()
-    else:
-        put_error('Błędne dane')
-        addProject()
 
 
 def addProject():
@@ -66,17 +62,27 @@ def addProject():
         input('Tytuł projektu', name='projectTitle'),
         select('Kierownik projektu', kierownicy, name='reportsTo'),
         input('Termin wykonania', name='deadline', type=DATE),
+        radio("Jak chcesz dobrać pracowników do projektu:", ['manualnie', 'automatycznie'], name='wybor'),
 
         actions('', [
-            {'label': 'Zapisz', 'value': 'save'},
+            {'label': 'Zapisz i wybierz pracowników', 'value': 'zapisz'},
             {'label': 'Anuluj', 'value': 'cancel'}
         ], name='action'),
     ])
 
-    if data_dodaj['action'] == 'save':
-        addSQL(data_dodaj)
+    if data_dodaj['action'] == 'zapisz':
+        # addSQL(data_dodaj)
         return
         # main_menu()
     elif data_dodaj['action'] == 'cancel':
         # main_menu()
         return
+
+
+def addEmployeesToProject():
+    data_to_add = input_group("Dodawanie pracowników do projektu", [
+        actions('', [
+            {'label': 'Manualne dobieranie', 'value': 'manual'},
+            {'label': 'Automatyczne dobieranie', 'value': 'automatic'}
+        ], name='action_dobieranie')
+    ])

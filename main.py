@@ -9,6 +9,15 @@ from hash import login_veryfication, connect_database
 def main_menu():
     while True:
         clear()
+
+        with open('header_style.html', 'r') as file:
+            header_style = file.read()
+
+        with use_scope('header'):
+            put_html(header_style)
+
+        show_projects()
+
         mainmenu = input_group("Strona główna ", [actions('', [
                 {'label': 'Dodaj pracownika', 'value': 'addEmployee'},
                 {'label': 'Utwórz projekt', 'value': 'CreateProject'},
@@ -16,16 +25,18 @@ def main_menu():
             ], name='action'),
         ])
         if mainmenu['action'] == 'addEmployee':
+            remove('projects')
             employees.addEmployee()
         elif mainmenu['action'] == 'CreateProject':
+            remove('projects')
             projects.addProject()
         elif mainmenu['action'] == 'logout':
+            remove('projects')
             print('Wylogowano')
             exit()
 
 
 def login():
-
     logindata = input_group("Logowanie", [
         input('Login', name='login'),
         input('Hasło', type=PASSWORD, name='password')])
@@ -49,6 +60,26 @@ def login():
     except ValueError:
         put_error('Błędne hasło')
         login()
+
+
+@use_scope('projects')
+def show_projects():
+    set_scope('projects')
+    cursor = conn.cursor()
+    cursor.execute("""
+    SELECT 
+        projectNumber,
+        projectTitle,
+        CONCAT_WS(' ', firstName, lastName) as 'leader_name',
+        progress,
+        deadline
+    FROM Projects JOIN Employees
+    ON Projects.projectLeader = Employees.employeeNumber;
+    """)
+    lst = cursor.fetchall()  # pobierz liste
+    put_text("Lista projektów:")
+
+    put_table(lst, header=['Numer', 'Tytuł projektu', 'Kierownik projektu', 'Postępy prac', 'Deadline'])
 
 
 if __name__ == '__main__':
