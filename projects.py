@@ -171,7 +171,7 @@ def addManually(data_dodaj):
         return
 
 
-def deleteProject(number):
+def deleteProject(number, choice):
     cursor = conn.cursor()
     number = int(number)
     number = number + 1
