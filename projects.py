@@ -98,6 +98,7 @@ def chooseEmployeesAuto(data_dodaj, employees_data):
     elif employees_data['employeesNumber']<1:
         put_error('Nieprawidlowe dane')
         addProject()
+        return
     print(employees_data['employeesNumber'])
 
     cursor.execute("""SELECT MAX(projectNumber) FROM projects""")
