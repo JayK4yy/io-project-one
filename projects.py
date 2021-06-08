@@ -87,8 +87,8 @@ def chooseEmployeesAuto(data_dodaj, employees_data):
     employeesskills = employeesskills.tolist()
     employeesskills.sort(key=lambda x: x[11], reverse=True)
 
-    # for employee in employeesskills:
-    #     print(employee)
+    for employee in employeesskills:
+        print(employee)
 
     cursor.execute("""SELECT COUNT(*) FROM employees""")
     maxEmployees = cursor.fetchall()[0][0]
@@ -179,7 +179,7 @@ def deleteProject(number, choice):
     cursor.execute("DELETE FROM Teams WHERE projectNumber = ?;", (number,))
     cursor.execute("DELETE FROM Projects WHERE projectNumber = ?;", (number,))
     conn.commit()
-    popup(str('Event ' + str(number) + ' deleted!'), size=PopupSize.SMALL)
+    popup(str('Project ' + str(number) + ' deleted!'), size=PopupSize.SMALL)
     # print(choice, number)
     remove('projects')
     show_projects()
